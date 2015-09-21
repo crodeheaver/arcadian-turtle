@@ -39,6 +39,7 @@ Bomberpac.prototype = {
     },
     preload: function() {
         this.load.image('dot', 'assets/dot.png');
+        this.load.spritesheet('explosion', 'assets/explosions.png',16,16,35,0,1);
         
         game.load.image('tiles', 'assets/pacman-tiles.png');
         this.load.tilemap('map', 'assets/pacman-map.json', null, Phaser.Tilemap.TILED_JSON);
@@ -67,12 +68,25 @@ Bomberpac.prototype = {
         this.bombs.setAll('outOfBoundsKill', true);
         this.bombs.setAll('checkWorldBounds', true);
         
+        //explosion group
+        this.explosions = game.add.group();
+        this.explosions.enableBody = true;
+        this.explosions.physicsBodyType = Phaser.Physics.ARCADE;
+        this.explosions.createMultiple(3,'explosion',5);
+        this.explosions.setAll('scale.x',1.5);
+        this.explosions.setAll('scale.y',1.5);
+        this.explosions.setAll('anchor.x', 0.5);
+        this.explosions.setAll('anchor.y', 0.5);
+        this.explosions.setAll('outOfBoundsKill', true);
+        this.explosions.setAll('checkWorldBounds', true);
         
         this.dots = this.add.physicsGroup();
         //  The dots will need to be offset by 6px to put them back in the middle of the grid
         this.dots.setAll('x', 6, false, false, 1);
         this.dots.setAll('y', 6, false, false, 1);
+        
         this.map.createFromTiles(7, this.safetile, 'dot', this.layer, this.dots);
+        
         this.player = game.add.sprite(220, 280, 'bomberman', 0);
         this.player.scale.setTo(.8, .8);
         this.player.animations.add('left', [0, 1, 0, 2], 10, true);
@@ -107,6 +121,9 @@ Bomberpac.prototype = {
         
         this.kill();
     },
+    createExplosion: function(){
+        this.reset(220,280);
+    },
     
     fire: function() {
         
@@ -120,6 +137,7 @@ Bomberpac.prototype = {
             bomb.reset(bombx,bomby);
             
             game.time.events.add(Phaser.Timer.SECOND * 3, this.explodeBomb, bomb);
+            game.time.events.add(Phaser.Timer.SECOND * 3, this.createExplosion, this.explosions.getFirstExists(false));
             
         }
         

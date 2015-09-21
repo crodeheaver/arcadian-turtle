@@ -59,9 +59,11 @@ Bomberpac.prototype = {
         this.bombs.enableBody = true;
         this.bombs.physicsBodyType = Phaser.Physics.ARCADE;
         this.bombs.createMultiple(3, 'bomb');
-        this.bombs.scale.setTo(.8,.8);
+        //this.bombs.scale.setTo(.8,.8);
+        this.bombs.setAll('scale.x',.8);
+        this.bombs.setAll('scale.y',.8);
         this.bombs.setAll('anchor.x', 0.5);
-        this.bombs.setAll('anchor.y', 1);
+        this.bombs.setAll('anchor.y', 0.5);
         this.bombs.setAll('outOfBoundsKill', true);
         this.bombs.setAll('checkWorldBounds', true);
         
@@ -78,7 +80,7 @@ Bomberpac.prototype = {
         this.player.animations.add('forward', [3, 4, 3, 5], 10, true);
         this.player.animations.add('backward', [9, 10, 9, 11], 10, true);
         this.player.anchor.set(0.5);
-        cursors = game.input.keyboard.createCursorKeys();
+        this.cursors = game.input.keyboard.createCursorKeys();
 
         //  Bomberman should collide with everything except the safe tile
         this.map.setCollisionByExclusion([this.safetile], true, this.layer);
@@ -113,8 +115,9 @@ Bomberpac.prototype = {
             this.nextFire = game.time.now + this.fireRate;
             
             var bomb = this.bombs.getFirstExists(false);
-
-            bomb.reset(this.player.x+40, this.player.y+40);
+            //debugger;
+            var bombx = this.player.x, bomby = this.player.y;
+            bomb.reset(bombx,bomby);
             
             game.time.events.add(Phaser.Timer.SECOND * 3, this.explodeBomb, bomb);
             
@@ -127,23 +130,23 @@ Bomberpac.prototype = {
         this.physics.arcade.collide(this.player, this.layer);
         this.physics.arcade.overlap(this.player, this.dots, this.collectDot, null, this);
 
-        this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
-        this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;
+        //this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
+        //this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;
 
-        if (cursors.left.isDown) {
+        if (this.cursors.left.isDown) {
             //  Move to the left
             this.player.body.velocity.x = -150;
             this.player.animations.play('left');
         }
-        else if (cursors.right.isDown) {
+        else if (this.cursors.right.isDown) {
             this.player.body.velocity.x = 150;
             this.player.animations.play('right');
         }
-        else if (cursors.up.isDown) {
+        else if (this.cursors.up.isDown) {
             this.player.body.velocity.y = -150;
             this.player.animations.play('backward');
         }
-        else if (cursors.down.isDown) {
+        else if (this.cursors.down.isDown) {
             this.player.body.velocity.y = 150;
             this.player.animations.play('forward');
         }

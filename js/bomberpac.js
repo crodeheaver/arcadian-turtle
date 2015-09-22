@@ -26,6 +26,9 @@ var Bomberpac = function(game) {
 Bomberpac.prototype = {
     fireRate: 1000,
     nextFire: 0,
+    hit: 0,
+    nextHit: 0,
+    text: null,
     init: function() {
 
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -151,6 +154,12 @@ Bomberpac.prototype = {
         this.physics.arcade.enable(this.player);
         this.player.body.setSize(16, 16, 0, 0);
 
+        this.text = game.add.text(20, 20, "Number of times hit: " + this.hit, {
+            font: "10px Arial",
+            fill: "#ff0044",
+            align: "left"
+        });
+
         this.fireButton = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
 
@@ -220,11 +229,29 @@ Bomberpac.prototype = {
         }
 
     },
+    loseLife: function() {
+
+        if (game.time.now > this.nextHit && this.bombs.countDead() > 0) {
+            this.nextHit = game.time.now + 1500;
+
+            this.hit += 1;
+            this.text.text = "Number of times hit: " + this.hit;
+        }
+
+
+    },
 
     update: function() {
         var speed = this.speed;
         this.physics.arcade.collide(this.player, this.layer);
         this.physics.arcade.overlap(this.player, this.dots, this.collectDot, null, this);
+
+        this.physics.arcade.overlap(this.player, this.centerExplosion, this.loseLife, null, this);
+        this.physics.arcade.overlap(this.player, this.topExplosion, this.loseLife, null, this);
+        this.physics.arcade.overlap(this.player, this.bottomExplosion, this.loseLife, null, this);
+        this.physics.arcade.overlap(this.player, this.leftExplosion, this.loseLife, null, this);
+        this.physics.arcade.overlap(this.player, this.rightExplosion, this.loseLife, null, this);
+
 
         //this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
         //this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;

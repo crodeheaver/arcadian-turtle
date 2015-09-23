@@ -29,6 +29,7 @@ Bomberpac.prototype = {
     hit: 0,
     nextHit: 0,
     text: null,
+    lives:3,
     init: function() {
 
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -154,7 +155,7 @@ Bomberpac.prototype = {
         this.physics.arcade.enable(this.player);
         this.player.body.setSize(20, 20, 0, 0);
 
-        this.text = game.add.text(20, 20, "Number of times hit: " + this.hit, {
+        this.text = game.add.text(20, 20, "Lives: " + this.lives, {
             font: "10px Arial",
             fill: "#ff0044",
             align: "left"
@@ -222,23 +223,25 @@ Bomberpac.prototype = {
             };
 
 
-            game.time.events.add(Phaser.Timer.SECOND * 3, this.explodeBomb, bomb);
-            game.time.events.add(Phaser.Timer.SECOND * 3, this.createExplosion, explosion);
-            game.time.events.add(Phaser.Timer.SECOND * 4.5, this.destroyExplosion, explosion);
+            game.time.events.add(Phaser.Timer.SECOND * 1.5, this.explodeBomb, bomb);
+            game.time.events.add(Phaser.Timer.SECOND * 1.5, this.createExplosion, explosion);
+            game.time.events.add(Phaser.Timer.SECOND * 3.5, this.destroyExplosion, explosion);
 
         }
 
     },
     loseLife: function() {
-
-        if (game.time.now > this.nextHit && this.bombs.countDead() > 0) {
-            this.nextHit = game.time.now + 1500;
-
-            this.hit += 1;
-            this.text.text = "Number of times hit: " + this.hit;
+        if(this.lives > 0){
+            this.player.reset(220, 280);
+            this.lives -=1;
+            this.text.text = "Lives: " + this.lives;
         }
-
-
+        else{
+            this.player.reset(220, 280);
+            this.lives = 3;
+            this.text.text = "Lives: " + this.lives;
+            this.dots.callAll('revive');
+        }
     },
 
     update: function() {

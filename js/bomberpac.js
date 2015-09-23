@@ -152,7 +152,7 @@ Bomberpac.prototype = {
         this.map.setCollisionByExclusion([this.safetile], true, this.layer);
 
         this.physics.arcade.enable(this.player);
-        this.player.body.setSize(16, 16, 0, 0);
+        this.player.body.setSize(20, 20, 0, 0);
 
         this.text = game.add.text(20, 20, "Number of times hit: " + this.hit, {
             font: "10px Arial",

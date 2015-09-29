@@ -48,6 +48,7 @@ Bomberpac.prototype = {
         game.load.image('tiles', 'assets/pacman-tiles.png');
         this.load.tilemap('map', 'assets/pacman-map.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.spritesheet('bomberman', 'assets/bomberman.png', 35, 52);
+        game.load.spritesheet('ghosts', 'assets/ghosts.png', 32, 32);
         game.load.image('bomb', 'assets/bomb.png');
 
 
@@ -148,6 +149,42 @@ Bomberpac.prototype = {
         this.player.animations.add('backward', [9, 10, 9, 11], 10, true);
         this.player.anchor.set(0.5);
         this.cursors = game.input.keyboard.createCursorKeys();
+        
+        //add red ghost
+        this.redGhost = game.add.sprite(191,230,'ghosts',0);
+        this.redGhost.animations.add('left', [6, 7], 5, true);
+        this.redGhost.animations.add('right', [4,5],5, true);
+        this.redGhost.animations.add('forward', [0,1],5, true);
+        this.redGhost.animations.add('backward', [2, 3], 5, true);
+        this.redGhost.anchor.set(0.5);
+        this.redGhost.animations.play('backward');
+        
+        //add pink ghost
+        this.pinkGhost = game.add.sprite(221,230,'ghosts',0);
+        this.pinkGhost.animations.add('left', [14, 15], 5, true);
+        this.pinkGhost.animations.add('right', [12,13],5, true);
+        this.pinkGhost.animations.add('forward', [8,9],5, true);
+        this.pinkGhost.animations.add('backward', [10, 11], 5, true);
+        this.pinkGhost.anchor.set(0.5);
+        this.pinkGhost.animations.play('backward');
+        
+        //add blue ghost
+        this.blueGhost = game.add.sprite(253,230,'ghosts',0);
+        this.blueGhost.animations.add('left', [22, 23], 5, true);
+        this.blueGhost.animations.add('right', [20,21],5, true);
+        this.blueGhost.animations.add('forward', [16,17],5, true);
+        this.blueGhost.animations.add('backward', [18, 19], 5, true);
+        this.blueGhost.anchor.set(0.5);
+        this.blueGhost.animations.play('backward');
+        
+        //add yellow ghost
+        this.yellowGhost = game.add.sprite(224,198,'ghosts',0);
+        this.yellowGhost.animations.add('left', [30, 31], 5, true);
+        this.yellowGhost.animations.add('right', [28,29],5, true);
+        this.yellowGhost.animations.add('forward', [24,25],5, true);
+        this.yellowGhost.animations.add('backward', [26, 27], 5, true);
+        this.yellowGhost.anchor.set(0.5);
+        this.yellowGhost.animations.play('backward');
 
         //  Bomberman should collide with everything except the safe tile
         this.map.setCollisionByExclusion([this.safetile], true, this.layer);

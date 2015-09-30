@@ -158,6 +158,8 @@ Bomberpac.prototype = {
         this.redGhost.animations.add('backward', [2, 3], 5, true);
         this.redGhost.anchor.set(0.5);
         this.redGhost.animations.play('backward');
+        this.physics.arcade.enable(this.redGhost);
+        this.redGhost.body.setSize(20, 20, 0, 0);
         
         //add pink ghost
         this.pinkGhost = game.add.sprite(221,230,'ghosts',0);
@@ -167,6 +169,8 @@ Bomberpac.prototype = {
         this.pinkGhost.animations.add('backward', [10, 11], 5, true);
         this.pinkGhost.anchor.set(0.5);
         this.pinkGhost.animations.play('backward');
+        this.physics.arcade.enable(this.pinkGhost);
+        this.pinkGhost.body.setSize(20, 20, 0, 0);
         
         //add blue ghost
         this.blueGhost = game.add.sprite(253,230,'ghosts',0);
@@ -176,15 +180,20 @@ Bomberpac.prototype = {
         this.blueGhost.animations.add('backward', [18, 19], 5, true);
         this.blueGhost.anchor.set(0.5);
         this.blueGhost.animations.play('backward');
+        this.physics.arcade.enable(this.blueGhost);
+        this.blueGhost.body.setSize(20, 20, 0, 0);
         
         //add yellow ghost
         this.yellowGhost = game.add.sprite(224,198,'ghosts',0);
+        this.yellowGhost.scale.setTo(.8, .8);
         this.yellowGhost.animations.add('left', [30, 31], 5, true);
         this.yellowGhost.animations.add('right', [28,29],5, true);
         this.yellowGhost.animations.add('forward', [24,25],5, true);
         this.yellowGhost.animations.add('backward', [26, 27], 5, true);
         this.yellowGhost.anchor.set(0.5);
         this.yellowGhost.animations.play('backward');
+        this.physics.arcade.enable(this.yellowGhost);
+        this.yellowGhost.body.setSize(20, 20, 0, 0);
 
         //  Bomberman should collide with everything except the safe tile
         this.map.setCollisionByExclusion([this.safetile], true, this.layer);
@@ -284,6 +293,10 @@ Bomberpac.prototype = {
     update: function() {
         var speed = this.speed;
         this.physics.arcade.collide(this.player, this.layer);
+        this.physics.arcade.collide(this.redGhost, this.layer);
+        this.physics.arcade.collide(this.blueGhost, this.layer);
+        this.physics.arcade.collide(this.pinkGhost, this.layer);
+        this.physics.arcade.collide(this.yellowGhost, this.layer);
         this.physics.arcade.overlap(this.player, this.dots, this.collectDot, null, this);
 
         this.physics.arcade.overlap(this.player, this.centerExplosion, this.loseLife, null, this);
@@ -300,18 +313,31 @@ Bomberpac.prototype = {
             //  Move to the left
             this.player.body.velocity.x = -150;
             this.player.animations.play('left');
+            
+            this.yellowGhost.body.velocity.x = -150;
+            this.yellowGhost.animations.play('left');
+            
         }
         else if (this.cursors.right.isDown) {
             this.player.body.velocity.x = 150;
             this.player.animations.play('right');
+            
+            this.yellowGhost.body.velocity.x = 150;
+            this.yellowGhost.animations.play('right');
         }
         else if (this.cursors.up.isDown) {
             this.player.body.velocity.y = -150;
             this.player.animations.play('backward');
+            
+            this.yellowGhost.body.velocity.y = -150;
+            this.yellowGhost.animations.play('backward');
         }
         else if (this.cursors.down.isDown) {
             this.player.body.velocity.y = 150;
             this.player.animations.play('forward');
+            
+            this.yellowGhost.body.velocity.y = 150;
+            this.yellowGhost.animations.play('forward');
         }
         else {
             //  Stand still
@@ -319,6 +345,9 @@ Bomberpac.prototype = {
             this.player.body.velocity.y = 0;
             this.player.body.velocity.x = 0;
             this.player.frame = 3;
+            
+            this.yellowGhost.body.velocity.x = 0;
+            this.yellowGhost.body.velocity.y = 0;
         }
 
         if (this.fireButton.isDown) {

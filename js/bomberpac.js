@@ -289,7 +289,10 @@ Bomberpac.prototype = {
             this.dots.callAll('revive');
         }
     },
-
+    
+    ghostMove: function(){
+        
+    },
     update: function() {
         var speed = this.speed;
         this.physics.arcade.collide(this.player, this.layer);
@@ -304,6 +307,8 @@ Bomberpac.prototype = {
         this.physics.arcade.overlap(this.player, this.bottomExplosion, this.loseLife, null, this);
         this.physics.arcade.overlap(this.player, this.leftExplosion, this.loseLife, null, this);
         this.physics.arcade.overlap(this.player, this.rightExplosion, this.loseLife, null, this);
+        
+        
 
 
         //this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;

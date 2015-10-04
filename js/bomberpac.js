@@ -290,7 +290,7 @@ Bomberpac.prototype = {
         }
     },
     
-    ghostMove: function(){
+    ghostMove: function(ghost){
         
     },
     update: function() {
@@ -307,6 +307,11 @@ Bomberpac.prototype = {
         this.physics.arcade.overlap(this.player, this.bottomExplosion, this.loseLife, null, this);
         this.physics.arcade.overlap(this.player, this.leftExplosion, this.loseLife, null, this);
         this.physics.arcade.overlap(this.player, this.rightExplosion, this.loseLife, null, this);
+        
+        this.ghostMove(this.blueGhost);
+        this.ghostMove(this.redGhost);
+        this.ghostMove(this.yellowGhost);
+        this.ghostMove(this.pinkGhost);
         
         
 

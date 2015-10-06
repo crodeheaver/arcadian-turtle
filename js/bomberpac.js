@@ -152,6 +152,7 @@ Bomberpac.prototype = {
         
         //add red ghost
         this.redGhost = game.add.sprite(191,230,'ghosts',0);
+        this.redGhost.scale.setTo(.8, .8);
         this.redGhost.animations.add('left', [6, 7], 5, true);
         this.redGhost.animations.add('right', [4,5],5, true);
         this.redGhost.animations.add('forward', [0,1],5, true);
@@ -163,6 +164,7 @@ Bomberpac.prototype = {
         
         //add pink ghost
         this.pinkGhost = game.add.sprite(221,230,'ghosts',0);
+        this.pinkGhost.scale.setTo(.8, .8);
         this.pinkGhost.animations.add('left', [14, 15], 5, true);
         this.pinkGhost.animations.add('right', [12,13],5, true);
         this.pinkGhost.animations.add('forward', [8,9],5, true);
@@ -174,6 +176,7 @@ Bomberpac.prototype = {
         
         //add blue ghost
         this.blueGhost = game.add.sprite(253,230,'ghosts',0);
+        this.blueGhost.scale.setTo(.8, .8);
         this.blueGhost.animations.add('left', [22, 23], 5, true);
         this.blueGhost.animations.add('right', [20,21],5, true);
         this.blueGhost.animations.add('forward', [16,17],5, true);
@@ -291,6 +294,14 @@ Bomberpac.prototype = {
     },
     
     ghostMove: function(ghost){
+        if(this.player.x < ghost.x)
+            ghost.body.velocity.x = -150;
+        else if(this.player.x > ghost.x)
+            ghost.body.velocity.x = 150;
+        if(this.player.y < ghost.y)
+            ghost.body.velocity.y = -150;
+        else if(this.player.y > ghost.y)
+            ghost.body.velocity.y = 150;
         
     },
     update: function() {
@@ -300,6 +311,23 @@ Bomberpac.prototype = {
         this.physics.arcade.collide(this.blueGhost, this.layer);
         this.physics.arcade.collide(this.pinkGhost, this.layer);
         this.physics.arcade.collide(this.yellowGhost, this.layer);
+        
+        
+        this.physics.arcade.collide(this.redGhost, this.pinkGhost);
+        this.physics.arcade.collide(this.redGhost, this.yellowGhost);
+        this.physics.arcade.collide(this.redGhost, this.blueGhost);
+        
+        this.physics.arcade.collide(this.blueGhost, this.pinkGhost);
+        this.physics.arcade.collide(this.blueGhost, this.yellowGhost)
+        
+        this.physics.arcade.collide(this.pinkGhost, this.yellowGhost);
+        
+        
+        
+        ;
+        this.physics.arcade.collide(this.pinkGhost, this.redGhost);
+        this.physics.arcade.collide(this.yellowGhost, this.blueGhost);
+        
         this.physics.arcade.overlap(this.player, this.dots, this.collectDot, null, this);
 
         this.physics.arcade.overlap(this.player, this.centerExplosion, this.loseLife, null, this);

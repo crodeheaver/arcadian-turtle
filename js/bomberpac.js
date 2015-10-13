@@ -319,8 +319,15 @@ Bomberpac.prototype = {
         
         this.physics.arcade.collide(this.blueGhost, this.pinkGhost);
         this.physics.arcade.collide(this.blueGhost, this.yellowGhost)
+        this.physics.arcade.collide(this.blueGhost, this.redGhost);
         
         this.physics.arcade.collide(this.pinkGhost, this.yellowGhost);
+        this.physics.arcade.collide(this.pinkGhost, this.blueGhost);
+        this.physics.arcade.collide(this.pinkGhost, this.redGhost);
+        
+        this.physics.arcade.collide(this.yellowGhost, this.pinkGhost);
+        this.physics.arcade.collide(this.yellowGhost, this.blueGhost);
+        this.physics.arcade.collide(this.yellowGhost, this.redGhost);
         
         
         

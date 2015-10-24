@@ -16,6 +16,7 @@ var Bomberpac = function(game) {
     this.turnPoint = new Phaser.Point();
 
     this.directions = [null, null, null, null, null];
+    this.yellowGhost.directions = [null, null, null, null, null];
     this.opposites = [Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP];
 
     this.current = Phaser.NONE;
@@ -189,10 +190,10 @@ Bomberpac.prototype = {
         //add yellow ghost
         this.yellowGhost = game.add.sprite(224,198,'ghosts',0);
         this.yellowGhost.scale.setTo(.8, .8);
-        this.yellowGhost.animations.add('left', [30, 31], 5, true);
-        this.yellowGhost.animations.add('right', [28,29],5, true);
-        this.yellowGhost.animations.add('forward', [24,25],5, true);
-        this.yellowGhost.animations.add('backward', [26, 27], 5, true);
+        this.yellowGhost.animations.add('right', [30, 31], 5, true);
+        this.yellowGhost.animations.add('left', [28,29],5, true);
+        this.yellowGhost.animations.add('backward', [24,25],5, true);
+        this.yellowGhost.animations.add('forward', [26, 27], 5, true);
         this.yellowGhost.anchor.set(0.5);
         this.yellowGhost.animations.play('backward');
         this.physics.arcade.enable(this.yellowGhost);
@@ -294,6 +295,14 @@ Bomberpac.prototype = {
     },
     
     ghostMove: function(ghost){
+        this.ghost.marker.x = this.math.snapToFloor(Math.floor(this.yellowGhost.x), this.gridsize) / this.gridsize;
+        this.ghost.marker.y = this.math.snapToFloor(Math.floor(this.yellowGhost.y), this.gridsize) / this.gridsize;
+        
+        this.ghost.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
+        this.ghost.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
+        this.ghost.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
+        this.ghost.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
+        
         if(this.player.x < ghost.x)
             ghost.body.velocity.x = -150;
         else if(this.player.x > ghost.x)
@@ -343,46 +352,45 @@ Bomberpac.prototype = {
         this.physics.arcade.overlap(this.player, this.leftExplosion, this.loseLife, null, this);
         this.physics.arcade.overlap(this.player, this.rightExplosion, this.loseLife, null, this);
         
-        this.ghostMove(this.blueGhost);
-        this.ghostMove(this.redGhost);
+        // this.ghostMove(this.blueGhost);
+        // this.ghostMove(this.redGhost);
         this.ghostMove(this.yellowGhost);
-        this.ghostMove(this.pinkGhost);
+        // this.ghostMove(this.pinkGhost);
         
         
 
 
-        //this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
-        //this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;
+        this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
+        this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;
+        
+        this.marker.x = this.math.snapToFloor(Math.floor(this.yellowGhost.x), this.gridsize) / this.gridsize;
+        this.marker.y = this.math.snapToFloor(Math.floor(this.yellowGhost.y), this.gridsize) / this.gridsize;
+        
+        this.marker.x = this.math.snapToFloor(Math.floor(this.redGhost.x), this.gridsize) / this.gridsize;
+        this.marker.y = this.math.snapToFloor(Math.floor(this.redGhost.y), this.gridsize) / this.gridsize;
+        
+        this.marker.x = this.math.snapToFloor(Math.floor(this.pinkGhost.x), this.gridsize) / this.gridsize;
+        this.marker.y = this.math.snapToFloor(Math.floor(this.pinkGhost.y), this.gridsize) / this.gridsize;
+        
+        this.marker.x = this.math.snapToFloor(Math.floor(this.blueGhost.x), this.gridsize) / this.gridsize;
+        this.marker.y = this.math.snapToFloor(Math.floor(this.blueGhost.y), this.gridsize) / this.gridsize;
 
         if (this.cursors.left.isDown) {
             //  Move to the left
             this.player.body.velocity.x = -150;
             this.player.animations.play('left');
-            
-            this.yellowGhost.body.velocity.x = -150;
-            this.yellowGhost.animations.play('left');
-            
         }
         else if (this.cursors.right.isDown) {
             this.player.body.velocity.x = 150;
             this.player.animations.play('right');
-            
-            this.yellowGhost.body.velocity.x = 150;
-            this.yellowGhost.animations.play('right');
         }
         else if (this.cursors.up.isDown) {
             this.player.body.velocity.y = -150;
             this.player.animations.play('backward');
-            
-            this.yellowGhost.body.velocity.y = -150;
-            this.yellowGhost.animations.play('backward');
         }
         else if (this.cursors.down.isDown) {
             this.player.body.velocity.y = 150;
             this.player.animations.play('forward');
-            
-            this.yellowGhost.body.velocity.y = 150;
-            this.yellowGhost.animations.play('forward');
         }
         else {
             //  Stand still
@@ -390,9 +398,6 @@ Bomberpac.prototype = {
             this.player.body.velocity.y = 0;
             this.player.body.velocity.x = 0;
             this.player.frame = 3;
-            
-            this.yellowGhost.body.velocity.x = 0;
-            this.yellowGhost.body.velocity.y = 0;
         }
 
         if (this.fireButton.isDown) {

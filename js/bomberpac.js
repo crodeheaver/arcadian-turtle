@@ -16,7 +16,6 @@ var Bomberpac = function(game) {
     this.turnPoint = new Phaser.Point();
 
     this.directions = [null, null, null, null, null];
-    this.yellowGhost.directions = [null, null, null, null, null];
     this.opposites = [Phaser.NONE, Phaser.RIGHT, Phaser.LEFT, Phaser.DOWN, Phaser.UP];
 
     this.current = Phaser.NONE;
@@ -198,6 +197,7 @@ Bomberpac.prototype = {
         this.yellowGhost.animations.play('backward');
         this.physics.arcade.enable(this.yellowGhost);
         this.yellowGhost.body.setSize(20, 20, 0, 0);
+            this.yellowGhost.directions = [null, null, null, null, null];
 
         //  Bomberman should collide with everything except the safe tile
         this.map.setCollisionByExclusion([this.safetile], true, this.layer);
@@ -295,22 +295,22 @@ Bomberpac.prototype = {
     },
     
     ghostMove: function(ghost){
-        this.ghost.marker.x = this.math.snapToFloor(Math.floor(this.yellowGhost.x), this.gridsize) / this.gridsize;
-        this.ghost.marker.y = this.math.snapToFloor(Math.floor(this.yellowGhost.y), this.gridsize) / this.gridsize;
+        // ghost.marker.x = this.math.snapToFloor(Math.floor(ghost.x), this.gridsize) / this.gridsize;
+        // ghost.marker.y = this.math.snapToFloor(Math.floor(ghost.y), this.gridsize) / this.gridsize;
         
-        this.ghost.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
-        this.ghost.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
-        this.ghost.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
-        this.ghost.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
+        // ghost.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
+        // ghost.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
+        // ghost.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
+        // ghost.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
         
-        if(this.player.x < ghost.x)
-            ghost.body.velocity.x = -150;
-        else if(this.player.x > ghost.x)
-            ghost.body.velocity.x = 150;
-        if(this.player.y < ghost.y)
-            ghost.body.velocity.y = -150;
-        else if(this.player.y > ghost.y)
-            ghost.body.velocity.y = 150;
+        // if(this.player.x < ghost.x)
+        //     ghost.body.velocity.x = -150;
+        // else if(this.player.x > ghost.x)
+        //     ghost.body.velocity.x = 150;
+        // if(this.player.y < ghost.y)
+        //     ghost.body.velocity.y = -150;
+        // else if(this.player.y > ghost.y)
+        //     ghost.body.velocity.y = 150;
         
     },
     update: function() {
@@ -374,6 +374,15 @@ Bomberpac.prototype = {
         
         this.marker.x = this.math.snapToFloor(Math.floor(this.blueGhost.x), this.gridsize) / this.gridsize;
         this.marker.y = this.math.snapToFloor(Math.floor(this.blueGhost.y), this.gridsize) / this.gridsize;
+        
+        
+         this.marker.x = this.math.snapToFloor(Math.floor(this.player.x), this.gridsize) / this.gridsize;
+         this.marker.y = this.math.snapToFloor(Math.floor(this.player.y), this.gridsize) / this.gridsize;
+        
+         this.directions[1] = this.map.getTileLeft(this.layer.index, this.marker.x, this.marker.y);
+         this.directions[2] = this.map.getTileRight(this.layer.index, this.marker.x, this.marker.y);
+         this.directions[3] = this.map.getTileAbove(this.layer.index, this.marker.x, this.marker.y);
+         this.directions[4] = this.map.getTileBelow(this.layer.index, this.marker.x, this.marker.y);
 
         if (this.cursors.left.isDown) {
             //  Move to the left
@@ -404,6 +413,35 @@ Bomberpac.prototype = {
             //  Boom!
             this.fire();
         }
-    }
+    },
+    render: function () {
+
+            //  Un-comment this to see the debug drawing
+
+            for (var t = 1; t < 5; t++)
+            {
+                if (this.directions[t] === null)
+                {
+                    continue;
+                }
+
+                var color = 'rgba(0,255,0,0.3)';
+
+                if (this.directions[t].index !== this.safetile)
+                {
+                    color = 'rgba(255,0,0,0.3)';
+                }
+
+                if (t === this.current)
+                {
+                    color = 'rgba(255,255,255,0.3)';
+                }
+
+                this.game.debug.geom(new Phaser.Rectangle(this.directions[t].worldX, this.directions[t].worldY, 32, 32), color, true);
+            }
+
+            this.game.debug.geom(this.turnPoint, '#ffff00');
+
+        }
 }
 game.state.add('Game', Bomberpac, true);
